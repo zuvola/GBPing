@@ -34,6 +34,7 @@
     copy.payloadSize = self.payloadSize;
     copy.ttl = self.ttl;
     copy.host = [self.host copy];
+    copy.ip = [self.ip copy];
     copy.sendDate = [self.sendDate copy];
     copy.receiveDate = [self.receiveDate copy];
     copy.status = self.status;
@@ -53,6 +54,7 @@
 
 -(void)dealloc {
     self.host = nil;
+    self.ip = nil;
     self.sendDate = nil;
     self.receiveDate = nil;
 }
@@ -60,7 +62,7 @@
 #pragma mark - description
 
 -(NSString *)description {
-    return [NSString stringWithFormat:@"host: %@, seq: %lu, status: %d, ttl: %lu, payloadSize: %lu, sendDate: %@, receiveDate: %@, rtt: %f", self.host, (unsigned long)self.sequenceNumber, self.status, (unsigned long)self.ttl, (unsigned long)self.payloadSize, self.sendDate, self.receiveDate, self.rtt];
+    return [NSString stringWithFormat:@"host: %@, ip:%@, seq: %lu, status: %d, ttl: %lu, payloadSize: %lu, sendDate: %@, receiveDate: %@, rtt: %f", self.host, self.ip, (unsigned long)self.sequenceNumber, self.status, (unsigned long)self.ttl, (unsigned long)self.payloadSize, self.sendDate, self.receiveDate, self.rtt];
 }
 
 @end

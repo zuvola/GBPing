@@ -249,14 +249,11 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
                 const struct sockaddr *anAddrPtr = (const struct sockaddr *)[address bytes];
                 
                 if ([address length] >= sizeof(struct sockaddr) &&
-                    (anAddrPtr->sa_family == AF_INET || anAddrPtr->sa_family == AF_INET6)) {
+                    (anAddrPtr->sa_family == AF_INET || (anAddrPtr->sa_family == AF_INET6 && self.useIpv6))) {
                     
                     resolved = true;
                     self.hostAddress = address;
-                    struct sockaddr_in *sin = (struct sockaddr_in *)anAddrPtr;
-                    char str[INET6_ADDRSTRLEN];
-                    inet_ntop(anAddrPtr->sa_family, &(sin->sin_addr), str, INET6_ADDRSTRLEN);
-                    self.hostAddressString = [[NSString alloc] initWithUTF8String:str];
+                    self.hostAddressString = [self ntop:(struct sockaddr *)anAddrPtr len:(socklen_t)address.length];
                     break;
                 }
             }
@@ -380,10 +377,8 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
     
     //process the data we read.
     if (bytesRead > 0) {
-        char hoststr[INET6_ADDRSTRLEN];
         struct sockaddr_in *sin = (struct sockaddr_in *)&addr;
-        inet_ntop(sin->sin_family, &(sin->sin_addr), hoststr, INET6_ADDRSTRLEN);
-        NSString *host = [[NSString alloc] initWithUTF8String:hoststr];
+        NSString *host = [self ntop:(struct sockaddr *)&addr len:addrLen];
 
         if([host isEqualToString:self.hostAddressString]) { // only make sense where received packet comes from expected source
             NSDate *receiveDate = [NSDate date];
@@ -411,12 +406,8 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
 
             if (pingSummary) {
                 if ([self isValidPingResponsePacket:packet]) {
-                    //override the source address (we might have sent to google.com and 172.123.213.192 replied)
                     pingSummary.receiveDate = receiveDate;
-                    // IP can't be read from header for ICMPv6
                     if (sin->sin_family == AF_INET) {
-                        pingSummary.host = [[self class] sourceAddressInPacket:packet];
-                        
                         //set ttl from response (different servers may respond with different ttls)
                         const struct IPHeader *ipPtr;
                         if ([packet length] >= sizeof(IPHeader)) {
@@ -532,6 +523,7 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
             //construct ping summary, as much as it can
             newPingSummary.sequenceNumber = self.nextSequenceNumber;
             newPingSummary.host = self.host;
+            newPingSummary.ip = self.hostAddressString;
             newPingSummary.sendDate = sendDate;
             newPingSummary.ttl = self.ttl;
             newPingSummary.payloadSize = self.payloadSize;
@@ -897,6 +889,16 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     return result;
 }
 
+- (NSString*)ntop:(struct sockaddr *)sa len:(socklen_t)len {
+    char ntop[NI_MAXHOST] = { 0 };
+    int ecode = getnameinfo(sa, len, ntop, sizeof(ntop), NULL, 0, NI_NUMERICHOST);
+    if (ecode == 0) {
+        return [[NSString alloc] initWithUTF8String:ntop];
+    } else {
+        return nil;
+    }
+}
+
 #pragma mark - memory
 
 -(id)init {
@@ -904,6 +906,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
         self.setupQueue = dispatch_queue_create("GBPing setup queue", 0);
         self.isStopped = YES;
         self.identifier = arc4random();
+        self.useIpv6 = YES;
     }
     
     return self;
