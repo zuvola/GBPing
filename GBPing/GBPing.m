@@ -249,8 +249,8 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
                 const struct sockaddr *anAddrPtr = (const struct sockaddr *)[address bytes];
                 
                 if ([address length] >= sizeof(struct sockaddr) &&
-                    (anAddrPtr->sa_family == AF_INET || (anAddrPtr->sa_family == AF_INET6 && self.useIpv6))) {
-                    
+                    ((self.useIpv4 && anAddrPtr->sa_family == AF_INET) ||
+                     (self.useIpv6 && anAddrPtr->sa_family == AF_INET6)) ) {
                     resolved = true;
                     self.hostAddress = address;
                     self.hostAddressString = [self ntop:(struct sockaddr *)anAddrPtr len:(socklen_t)address.length];
@@ -906,6 +906,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
         self.setupQueue = dispatch_queue_create("GBPing setup queue", 0);
         self.isStopped = YES;
         self.identifier = arc4random();
+        self.useIpv4 = YES;
         self.useIpv6 = YES;
     }
     

@@ -27,7 +27,8 @@
     self.ping.delegate = self;
     self.ping.timeout = 1.0;
     self.ping.pingPeriod = 0.9;
-    //self.ping.useIpv6 = NO;
+    self.ping.useIpv4 = YES;
+    self.ping.useIpv6 = NO;
 }
 
 - (void)tearDown {
@@ -57,7 +58,7 @@
             
         }
         else {
-            NSLog(@"failed to start");
+            NSLog(@"failed to start:%@", error);
         }
     }];
     

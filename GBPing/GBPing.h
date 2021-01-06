@@ -28,6 +28,7 @@ typedef void(^StartupCallback)(BOOL success, NSError * _Nullable error);
 @property (assign, atomic) NSUInteger               ttl;
 @property (assign, atomic, readonly) BOOL           isPinging;
 @property (assign, atomic, readonly) BOOL           isReady;
+@property (assign, atomic) BOOL                     useIpv4;
 @property (assign, atomic) BOOL                     useIpv6;
 
 @property (assign, atomic) BOOL                     debug;
