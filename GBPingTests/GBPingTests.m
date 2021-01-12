@@ -29,6 +29,7 @@
     self.ping.pingPeriod = 0.9;
     self.ping.useIpv4 = YES;
     self.ping.useIpv6 = NO;
+    self.ping.count = 3;
 }
 
 - (void)tearDown {

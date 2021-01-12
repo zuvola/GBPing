@@ -26,6 +26,7 @@ typedef void(^StartupCallback)(BOOL success, NSError * _Nullable error);
 @property (assign, atomic) NSTimeInterval           timeout;
 @property (assign, atomic) NSUInteger               payloadSize;
 @property (assign, atomic) NSUInteger               ttl;
+@property (assign, atomic) NSUInteger               count;
 @property (assign, atomic, readonly) BOOL           isPinging;
 @property (assign, atomic, readonly) BOOL           isReady;
 @property (assign, atomic) BOOL                     useIpv4;

@@ -41,6 +41,7 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
 @property (strong, nonatomic) NSData                    *hostAddress;
 @property (strong, nonatomic) NSString                  *hostAddressString;
 @property (assign, nonatomic) uint16_t                  identifier;
+@property (assign, nonatomic) NSUInteger                counter;
 
 @property (assign, atomic, readwrite) BOOL              isPinging;
 @property (assign, atomic, readwrite) BOOL              isReady;
@@ -57,6 +58,7 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
 @implementation GBPing {
     NSUInteger                                          _payloadSize;
     NSUInteger                                          _ttl;
+    NSUInteger                                          _count;
     NSTimeInterval                                      _timeout;
     NSTimeInterval                                      _pingPeriod;
 }
@@ -107,6 +109,30 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
         }
         else {
             return _ttl;
+        }
+    }
+}
+
+-(void)setCount:(NSUInteger)count {
+    @synchronized(self) {
+        if (self.isPinging) {
+            if (self.debug) {
+                NSLog(@"GBPing: can't set count while pinger is running.");
+            }
+        }
+        else {
+            _count = count;
+        }
+    }
+}
+
+-(NSUInteger)count {
+    @synchronized(self) {
+        if (!_count) {
+            return 0;
+        }
+        else {
+            return _count;
         }
     }
 }
@@ -469,16 +495,29 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
 
 -(void)sendLoop {
     @autoreleasepool {
+        self.counter = _count;
+        BOOL stopping = NO;
         while (self.isPinging) {
             [self sendPing];
           
-            NSTimeInterval runUntil = CFAbsoluteTimeGetCurrent() + self.pingPeriod;
+            if (_count > 0) {
+                self.counter -= 1;
+                if (self.counter == 0) {
+                    stopping = YES;
+                }
+            }
+
+            NSTimeInterval runUntil = CFAbsoluteTimeGetCurrent() + (stopping ? self.timeout : self.pingPeriod);
             NSTimeInterval time = 0;
             while (runUntil > time) {
                 NSDate *runUntilDate = [NSDate dateWithTimeIntervalSinceReferenceDate:runUntil];
                 [[NSRunLoop currentRunLoop] runUntilDate:runUntilDate];
         
                 time = CFAbsoluteTimeGetCurrent();
+            }
+            if (stopping) {
+              [self stop];
+              break;
             }
         }
     }
