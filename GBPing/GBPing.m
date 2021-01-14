@@ -497,6 +497,7 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
     @autoreleasepool {
         self.counter = _count;
         BOOL stopping = NO;
+        NSTimeInterval startTime = CFAbsoluteTimeGetCurrent();
         while (self.isPinging) {
             [self sendPing];
           
@@ -516,9 +517,14 @@ static NSTimeInterval const kDefaultTimeout =           2.0;
                 time = CFAbsoluteTimeGetCurrent();
             }
             if (stopping) {
-              [self stop];
               break;
             }
+        }
+        [self stop];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(ping:didFinishWithTime:)] ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate ping:self didFinishWithTime:CFAbsoluteTimeGetCurrent() - startTime];
+            });
         }
     }
 }

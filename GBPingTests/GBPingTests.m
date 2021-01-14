@@ -29,7 +29,7 @@
     self.ping.pingPeriod = 0.9;
     self.ping.useIpv4 = YES;
     self.ping.useIpv6 = NO;
-    self.ping.count = 3;
+//    self.ping.count = 3;
 }
 
 - (void)tearDown {
@@ -52,9 +52,10 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(stopSecond * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSLog(@"Stop ping .");
                 [self.ping stop];
-                self.ping = nil;
-                
-                [exp fulfill];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    self.ping = nil;
+                    [exp fulfill];
+                });
             });
             
         }
@@ -96,7 +97,10 @@
 
 - (void)ping:(GBPing *)pinger didReceiveUnexpectedReplyWithSummary:(GBPingSummary *)summary {
     NSLog(@"********* didReceiveUnexpectedReplyWithSummary : %@", summary);
-    
+}
+
+-(void)ping:(GBPing *)pinger didFinishWithTime:(NSTimeInterval)time {
+  NSLog(@"********* didFinishWithTime : %f", time);
 }
 
 @end

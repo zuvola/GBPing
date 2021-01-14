@@ -42,14 +42,14 @@
 /* Begin PBXFileReference section */
 		49E8317D1B68BD8F00672E0D /* GBPingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GBPingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49E831801B68BD8F00672E0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		49E831811B68BD8F00672E0D /* GBPingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBPingTests.m; sourceTree = "<group>"; };
+		49E831811B68BD8F00672E0D /* GBPingTests.m */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = GBPingTests.m; sourceTree = "<group>"; tabWidth = 4; };
 		8A56803C1654FD2D0096DB72 /* ICMPHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICMPHeader.h; sourceTree = "<group>"; };
 		8A70AC3C16526C7500409BAF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8ADF26B81647CC1F000240C2 /* libGBPing.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGBPing.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ADF26BB1647CC1F000240C2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ADF26BF1647CC1F000240C2 /* GBPing-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GBPing-Prefix.pch"; sourceTree = "<group>"; };
 		8ADF26C01647CC1F000240C2 /* GBPing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBPing.h; sourceTree = "<group>"; };
-		8ADF26C21647CC1F000240C2 /* GBPing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBPing.m; sourceTree = "<group>"; };
+		8ADF26C21647CC1F000240C2 /* GBPing.m */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = GBPing.m; sourceTree = "<group>"; tabWidth = 4; };
 		8ADF26E01647D4B0000240C2 /* GBPingSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBPingSummary.h; sourceTree = "<group>"; };
 		8ADF26E11647D4B0000240C2 /* GBPingSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBPingSummary.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -206,6 +206,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 8ADF26AD1647CC1F000240C2;

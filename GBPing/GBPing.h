@@ -44,6 +44,7 @@ typedef void(^StartupCallback)(BOOL success, NSError * _Nullable error);
 
 @optional
 
+-(void)ping:(GBPing *)pinger didFinishWithTime:(NSTimeInterval)time;
 -(void)ping:(GBPing *)pinger didFailWithError:(NSError *)error;
 
 -(void)ping:(GBPing *)pinger didSendPingWithSummary:(GBPingSummary *)summary;
